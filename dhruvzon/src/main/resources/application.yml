@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/amazon_clone # Local PostgreSQL DB connection
+    username: postgres # Your DB username
+    password: postgres # Your DB password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Automatically creates/updates schema in dev
+    show-sql: true # Logs SQL queries in the console
+    properties:
+      hibernate:
+        format_sql: true # Formats SQL output for readability
+
+  jwt:
+    secret: 36763979244226452948404D635166546A576D5A7134743777217A25432A462D
+    expirationTime: 8600000
+
+
+
+logging:
+  level:
+    root: info # General logging level
+    org.springframework: debug # Debug-level logging for Spring framework
