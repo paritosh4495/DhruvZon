@@ -1,4 +1,5 @@
 package com.Ecommerce.dhruvzon.controller;
+
 import com.Ecommerce.dhruvzon.dto.user.UserRequestDTO;
 import com.Ecommerce.dhruvzon.dto.user.UserResponseDTO;
 import com.Ecommerce.dhruvzon.response.ApiResponse;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,17 +18,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
-
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<UserResponseDTO>> createUser(
-           @Valid @RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<ApiResponse<UserResponseDTO>> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
         UserResponseDTO createdUser = userService.createUser(userRequestDTO);
         ApiResponse<UserResponseDTO> response = new ApiResponse<>(createdUser, "User created successfully");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
     public ResponseEntity<ApiResponse<UserResponseDTO>> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
         UserResponseDTO updatedUser = userService.updateUser(id, userRequestDTO);
@@ -34,6 +35,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponseDTO>> getUserById(@PathVariable Long id) {
         UserResponseDTO user = userService.getUserById(id);
@@ -41,14 +43,15 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or #email == principal.username")
     @GetMapping("/email")
-    public ResponseEntity<ApiResponse<UserResponseDTO>> getUserByEmail(
-            @RequestParam String email) {
+    public ResponseEntity<ApiResponse<UserResponseDTO>> getUserByEmail(@RequestParam String email) {
         UserResponseDTO user = userService.getUserByEmail(email);
         ApiResponse<UserResponseDTO> response = new ApiResponse<>(user, "User fetched successfully by email");
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/active")
     public ResponseEntity<ApiResponse<List<UserResponseDTO>>> getAllActiveUsers() {
         List<UserResponseDTO> activeUsers = userService.getAllActiveUsers();
@@ -56,6 +59,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<ApiResponse<List<UserResponseDTO>>> getAllUsers() {
         List<UserResponseDTO> allUsers = userService.getAllUsers();
@@ -63,6 +67,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse<String>> deleteUserById(@PathVariable Long id) {
         String message = userService.deleteUserById(id);

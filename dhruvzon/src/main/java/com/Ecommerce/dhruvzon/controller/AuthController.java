@@ -3,6 +3,7 @@ package com.Ecommerce.dhruvzon.controller;
 import com.Ecommerce.dhruvzon.dto.auth.LoginRequestDTO;
 import com.Ecommerce.dhruvzon.response.ApiResponse;
 import com.Ecommerce.dhruvzon.security.jwt.JwtUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<String>> login(
-            @RequestBody LoginRequestDTO loginRequestDTO
+          @Valid @RequestBody LoginRequestDTO loginRequestDTO
     ) {
         try {
             Authentication authentication = authenticationManager.authenticate(

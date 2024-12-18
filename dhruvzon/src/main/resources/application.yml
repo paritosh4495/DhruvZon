@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update # Automatically creates/updates schema in dev
+      ddl-auto: create-drop # Automatically creates/updates schema in dev
     show-sql: true # Logs SQL queries in the console
     properties:
       hibernate:

@@ -31,8 +31,6 @@ import java.util.List;
 public class SecurityConfig {
 
 
-    private static final List<String> SECURED_URLS = List.of("/api/v1/carts/**", "/api/v1/cartItems/**"); // Define secured endpoints
-
     private final CustomUserDetailsService userDetailsService; // Your custom user details service
     private final JwtAuthenticationEntryPoint authEntryPoint; // Your custom entry point for handling unauthorized access
     private final JwtRequestFilter jwtRequestFilter; // Your JWT filter
@@ -57,20 +55,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection for stateless APIs
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint)) // Set entry point for unauthorized access
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Use stateless session management
+        http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection for APIs
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint)) // Set unauthorized access entry point
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        .requestMatchers(SECURED_URLS.toArray(String[]::new)).hasAnyRole("USER", "ADMIN")
-                        .anyRequest().permitAll());
+                        .requestMatchers("/api/auth/**", "/api/users/register").permitAll() // Public endpoints
+                        .anyRequest().authenticated()); // All other endpoints require authentication
+        http.authenticationProvider(daoAuthenticationProvider()); // Set authentication provider
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
 
-        http.authenticationProvider(daoAuthenticationProvider()); // Set the authentication provider
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter before username/password authentication filter
-
-        return http.build(); // Build and return the security filter chain
+        return http.build();
     }
-
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
