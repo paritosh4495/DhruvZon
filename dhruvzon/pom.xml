@@ -16,7 +16,6 @@
 
 	<properties>
 		<java.version>21</java.version>
-		<org.mapstruct.version>1.6.3</org.mapstruct.version> <!-- Corrected version -->
 	</properties>
 
 	<dependencies>
@@ -54,20 +53,7 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
-		<!-- Mapper -->
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct</artifactId>
-			<version>${org.mapstruct.version}</version>
-		</dependency>
 
-		<!-- Annotation Processor for MapStruct -->
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct-processor</artifactId>
-			<version>${org.mapstruct.version}</version>
-			<scope>provided</scope>
-		</dependency>
 
 		<!-- Flyway for Database Migrations -->
 
@@ -126,6 +112,7 @@
 
 	<build>
 		<plugins>
+
 
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
