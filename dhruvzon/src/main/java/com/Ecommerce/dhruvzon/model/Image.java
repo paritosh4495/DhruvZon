@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDateTime;
 
@@ -29,7 +30,12 @@ public class Image {
 
     @Column(nullable = false)
     @NotNull
+    @URL
     private String url;
+
+
+    @Column(nullable = false)
+    private String fileType;  // Added to store file type like .jpg, .png, etc.
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)

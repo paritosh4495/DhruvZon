@@ -1,7 +1,10 @@
 package com.Ecommerce.dhruvzon.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +19,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "T_Review")
+@Table(name = "T_Review", uniqueConstraints = @UniqueConstraint(columnNames = {"product_id", "user_id"}))
 public class Review {
 
     @Id
@@ -28,6 +31,8 @@ public class Review {
     private String content;
 
     @Column(nullable = false)
+    @Min(1)
+    @Max(5)
     private Float rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
