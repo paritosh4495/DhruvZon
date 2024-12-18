@@ -21,7 +21,6 @@ public class UserMapper {
         user.setPassword(userRequestDTO.getPassword());  // Password should be encoded before saving
         user.setPhoneNumber(userRequestDTO.getPhoneNumber());
         user.setAddress(userRequestDTO.getAddress());
-        user.setRole(userRequestDTO.getRole());
         user.setStatus(Status.ACTIVE);  // Default status
 
         return user;

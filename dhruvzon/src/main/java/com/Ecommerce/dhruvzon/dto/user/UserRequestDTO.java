@@ -40,6 +40,4 @@ public class UserRequestDTO {
     @NotEmpty
     private String address;
 
-    @NotNull
-    private Role role;
 }

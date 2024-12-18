@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -27,7 +27,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<ApiResponse<UserResponseDTO>> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
         UserResponseDTO updatedUser = userService.updateUser(id, userRequestDTO);
         ApiResponse<UserResponseDTO> response = new ApiResponse<>(updatedUser, "User updated successfully");
@@ -42,7 +42,8 @@ public class UserController {
     }
 
     @GetMapping("/email")
-    public ResponseEntity<ApiResponse<UserResponseDTO>> getUserByEmail(@RequestParam String email) {
+    public ResponseEntity<ApiResponse<UserResponseDTO>> getUserByEmail(
+            @RequestParam String email) {
         UserResponseDTO user = userService.getUserByEmail(email);
         ApiResponse<UserResponseDTO> response = new ApiResponse<>(user, "User fetched successfully by email");
         return ResponseEntity.ok(response);
@@ -55,14 +56,14 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<ApiResponse<List<UserResponseDTO>>> getAllUsers() {
         List<UserResponseDTO> allUsers = userService.getAllUsers();
         ApiResponse<List<UserResponseDTO>> response = new ApiResponse<>(allUsers, "All users fetched successfully");
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse<String>> deleteUserById(@PathVariable Long id) {
         String message = userService.deleteUserById(id);
         ApiResponse<String> response = new ApiResponse<>(message, "User deleted successfully");
