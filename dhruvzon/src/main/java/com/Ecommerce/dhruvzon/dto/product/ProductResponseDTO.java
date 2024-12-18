@@ -1,9 +1,12 @@
 package com.Ecommerce.dhruvzon.dto.product;
 
+import com.Ecommerce.dhruvzon.dto.image.ImageResponseDTO;
+import com.Ecommerce.dhruvzon.dto.review.ReviewResponseDTO;
 import com.Ecommerce.dhruvzon.enums.ProductStatus;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 // Added
@@ -16,8 +19,7 @@ public class ProductResponseDTO {
     private String brand;
     private Integer stockQuantity;
     private ProductStatus status;
-    private List<ImageDTO> images; // Nested DTO for images
-    private List<ReviewDTO> reviews; // Nested DTO for reviews
+    private List<ImageResponseDTO> images; // Nested DTO for images
+    private List<ReviewResponseDTO> reviews; // Nested DTO for reviews
     private BigDecimal discount;
-    private String message; // Success or error message
 }

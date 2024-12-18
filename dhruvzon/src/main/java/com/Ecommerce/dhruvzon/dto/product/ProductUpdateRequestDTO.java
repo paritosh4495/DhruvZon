@@ -17,7 +17,7 @@ public class ProductUpdateRequestDTO {
     @Positive
     private BigDecimal price; // Optional
 
-    private Long categoryId; // Optional
+    private String category; // Optional
 
     private String brand; // Optional
 

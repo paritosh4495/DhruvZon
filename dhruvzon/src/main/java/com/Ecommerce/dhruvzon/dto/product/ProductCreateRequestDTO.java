@@ -25,7 +25,7 @@ public class ProductCreateRequestDTO {
     private BigDecimal price;
 
     @NotNull
-    private Long categoryId; // Reference to the category ID
+    private String category; // Reference to the category Name
 
     @NotBlank
     @Size(max = 122)
