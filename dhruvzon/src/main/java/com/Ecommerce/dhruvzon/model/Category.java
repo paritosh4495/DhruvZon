@@ -2,6 +2,7 @@ package com.Ecommerce.dhruvzon.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,27 +26,41 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100, unique = true)
     @NotNull
+    @Size(min = 1, max = 100)
     private String name;
 
     // Self-referencing relationship for parent category
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Category parentCategory;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Category> subCategories;
+    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Category> subCategories = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdDate;
 
     @UpdateTimestamp
     private LocalDateTime modifiedDate;
+
+    // Prevent cycles in the parent-child relationship
+    @PrePersist
+    @PreUpdate
+    private void validateCategoryHierarchy() {
+        if (parentCategory != null && parentCategory.getId().equals(this.getId())) {
+            throw new IllegalArgumentException("A category cannot be its own parent.");
+        }
+        // Optionally enforce that subcategories must have a parent category
+        if (parentCategory == null && this.subCategories != null && !this.subCategories.isEmpty()) {
+            throw new IllegalArgumentException("Top-level categories cannot have subcategories without a parent.");
+        }
+    }
 
 
 }
