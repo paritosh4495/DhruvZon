@@ -6,6 +6,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
+// Added
 public class ProductResponseDTO {
     private Long id;
     private String name;
