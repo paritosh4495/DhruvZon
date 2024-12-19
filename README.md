@@ -24,27 +24,28 @@ Dhruvzon is a production-grade e-commerce application inspired by platforms like
 The project follows a standard structure, allowing for easy navigation and understanding of its components. 
 .idea/
 dhruvzon/
-    .mvn/
-    src/
-        main/
-            java/
-                com/
-                    Ecommerce/
-                        dhruvzon/
-                            controller/
-                            dto/
-                            enums/
-                            exception/
-                            initializer/
-                            mapper/
-                            model/
-                            repository/
-                            response/
-                            security/
-                            service/
-                            DhruvzonApplication.java
-        test/
-    target/
+    ├── .mvn/
+    ├── src/
+    │   ├── main/
+    │   │   ├── java/
+    │   │   │   └── com/
+    │   │   │       └── Ecommerce/
+    │   │   │           └── dhruvzon/
+    │   │   │               ├── controller/
+    │   │   │               ├── dto/
+    │   │   │               ├── enums/
+    │   │   │               ├── exception/
+    │   │   │               ├── initializer/
+    │   │   │               ├── mapper/
+    │   │   │               ├── model/
+    │   │   │               ├── repository/
+    │   │   │               ├── response/
+    │   │   │               ├── security/
+    │   │   │               └── service/
+    │   │   └── DhruvzonApplication.java
+    │   └── test/
+    └── target/
+
 
 ## Installation
 
