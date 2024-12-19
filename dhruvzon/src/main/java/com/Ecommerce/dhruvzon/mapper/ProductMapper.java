@@ -14,6 +14,7 @@ public interface ProductMapper {
     ProductDetailDTO toProductDetailDTO(Product product);
 
     // Map Product Entity to ProductListDTO
+    @Mapping(target = "categoryName", source = "category.name")
     ProductListDTO toProductListDTO(Product product);
 
     // Map ProductCreateRequestDTO to Product Entity
@@ -33,8 +34,10 @@ public interface ProductMapper {
     Product toProduct(ProductUpdateRequestDTO productUpdateRequestDTO, @MappingTarget Product product);
 
     // Map Product Entity to ResponseDTO after creation or update
+    @Mapping(target = "categoryName", source = "category.name")
     ProductResponseDTO toResponseDTO(Product product);
 
     // Map List of Product Entities to List of ProductListDTOs
+    @Mapping(target = "categoryName", source = "category.name")
     List<ProductListDTO> toProductListDTOs(List<Product> products);
 }

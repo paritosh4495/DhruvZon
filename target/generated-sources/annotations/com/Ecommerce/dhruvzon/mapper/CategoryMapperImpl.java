@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-12-19T13:07:59+0530",
+    date = "2024-12-19T16:26:26+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.5 (Oracle Corporation)"
 )
 @Component
 public class CategoryMapperImpl implements CategoryMapper {
 
     @Override
-    public CategoryDetailDTO toDetailDTO(Category category) {
+    public CategoryDetailDTO toCategoryDetailDTO(Category category) {
         if ( category == null ) {
             return null;
         }
@@ -26,7 +26,7 @@ public class CategoryMapperImpl implements CategoryMapper {
         CategoryDetailDTO categoryDetailDTO = new CategoryDetailDTO();
 
         categoryDetailDTO.setParentCategoryId( categoryParentCategoryId( category ) );
-        categoryDetailDTO.setSubCategories( toDetailDTOs( category.getSubCategories() ) );
+        categoryDetailDTO.setSubCategories( toCategoryDetailDTOs( category.getSubCategories() ) );
         categoryDetailDTO.setId( category.getId() );
         categoryDetailDTO.setName( category.getName() );
 
@@ -34,7 +34,7 @@ public class CategoryMapperImpl implements CategoryMapper {
     }
 
     @Override
-    public Category toEntity(CategoryRequestDTO categoryRequestDTO) {
+    public Category toCategory(CategoryRequestDTO categoryRequestDTO) {
         if ( categoryRequestDTO == null ) {
             return null;
         }
@@ -48,7 +48,7 @@ public class CategoryMapperImpl implements CategoryMapper {
     }
 
     @Override
-    public CategoryResponseDTO toResponseDTO(Category category) {
+    public CategoryResponseDTO toCategoryResponseDTO(Category category) {
         if ( category == null ) {
             return null;
         }
@@ -63,14 +63,14 @@ public class CategoryMapperImpl implements CategoryMapper {
     }
 
     @Override
-    public List<CategoryDetailDTO> toDetailDTOs(List<Category> categories) {
+    public List<CategoryDetailDTO> toCategoryDetailDTOs(List<Category> categories) {
         if ( categories == null ) {
             return null;
         }
 
         List<CategoryDetailDTO> list = new ArrayList<CategoryDetailDTO>( categories.size() );
         for ( Category category : categories ) {
-            list.add( toDetailDTO( category ) );
+            list.add( toCategoryDetailDTO( category ) );
         }
 
         return list;

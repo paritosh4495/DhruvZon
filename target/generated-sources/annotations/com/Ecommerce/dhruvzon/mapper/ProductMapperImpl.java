@@ -8,6 +8,7 @@ import com.Ecommerce.dhruvzon.dto.product.ProductResponseDTO;
 import com.Ecommerce.dhruvzon.dto.product.ProductUpdateRequestDTO;
 import com.Ecommerce.dhruvzon.dto.review.ReviewResponseDTO;
 import com.Ecommerce.dhruvzon.enums.ProductStatus;
+import com.Ecommerce.dhruvzon.model.Category;
 import com.Ecommerce.dhruvzon.model.Image;
 import com.Ecommerce.dhruvzon.model.Product;
 import com.Ecommerce.dhruvzon.model.Review;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-12-19T13:08:00+0530",
+    date = "2024-12-19T16:26:27+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.5 (Oracle Corporation)"
 )
 @Component
@@ -45,7 +46,7 @@ public class ProductMapperImpl implements ProductMapper {
         productDetailDTO.setDescription( product.getDescription() );
         productDetailDTO.setPrice( product.getPrice() );
         productDetailDTO.setBrand( product.getBrand() );
-        productDetailDTO.setCategory( categoryMapper.toDetailDTO( product.getCategory() ) );
+        productDetailDTO.setCategory( categoryMapper.toCategoryDetailDTO( product.getCategory() ) );
         productDetailDTO.setStockQuantity( product.getStockQuantity() );
         productDetailDTO.setStatus( product.getStatus() );
         productDetailDTO.setImages( imageListToImageResponseDTOList( product.getImages() ) );
@@ -63,6 +64,7 @@ public class ProductMapperImpl implements ProductMapper {
 
         ProductListDTO productListDTO = new ProductListDTO();
 
+        productListDTO.setCategoryName( productCategoryName( product ) );
         productListDTO.setId( product.getId() );
         productListDTO.setName( product.getName() );
         productListDTO.setPrice( product.getPrice() );
@@ -130,6 +132,7 @@ public class ProductMapperImpl implements ProductMapper {
 
         ProductResponseDTO productResponseDTO = new ProductResponseDTO();
 
+        productResponseDTO.setCategoryName( productCategoryName( product ) );
         productResponseDTO.setId( product.getId() );
         productResponseDTO.setName( product.getName() );
         productResponseDTO.setDescription( product.getDescription() );
@@ -182,5 +185,13 @@ public class ProductMapperImpl implements ProductMapper {
         }
 
         return list1;
+    }
+
+    private String productCategoryName(Product product) {
+        Category category = product.getCategory();
+        if ( category == null ) {
+            return null;
+        }
+        return category.getName();
     }
 }

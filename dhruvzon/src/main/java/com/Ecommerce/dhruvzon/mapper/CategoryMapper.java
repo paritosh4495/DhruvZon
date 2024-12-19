@@ -14,15 +14,15 @@ public interface CategoryMapper {
 
     @Mapping(source = "parentCategory.id", target = "parentCategoryId")
     @Mapping(source = "subCategories", target = "subCategories")
-    CategoryDetailDTO toDetailDTO(Category category);
+    CategoryDetailDTO toCategoryDetailDTO(Category category);
 
     @Mapping(source = "parentCategoryId", target = "parentCategory.id")
-    Category toEntity(CategoryRequestDTO categoryRequestDTO);
+    Category toCategory(CategoryRequestDTO categoryRequestDTO);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "parentCategory.id", target = "parentCategoryId")
-    CategoryResponseDTO toResponseDTO(Category category);
+    CategoryResponseDTO toCategoryResponseDTO(Category category);
 
-    List<CategoryDetailDTO> toDetailDTOs(List<Category> categories);
+    List<CategoryDetailDTO> toCategoryDetailDTOs(List<Category> categories);
 }
