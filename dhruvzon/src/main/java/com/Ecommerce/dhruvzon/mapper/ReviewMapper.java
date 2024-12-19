@@ -12,7 +12,7 @@ public interface ReviewMapper {
 
 
     // Map Review Entity to ReviewResponseDTO
-    @Mapping(source = "user.name", target = "userName") // Map user name from the User entity
+    @Mapping(source = "user.firstName", target = "userName") // Map user name from the User entity
     ReviewResponseDTO toReviewResponseDTO(Review review);
 
     // Map ReviewCreateOrUpdateRequestDTO to Review Entity

@@ -24,10 +24,12 @@ public interface ProductMapper {
     @Mapping(target = "images", ignore = true)
     @Mapping(target = "isDeleted", constant = "false")
     @Mapping(target = "status", constant = "ACTIVE")
+    @Mapping(target = "category", ignore = true)  // We will set category in the service layer
     Product toProduct(ProductCreateRequestDTO productCreateRequestDTO);
 
     // Map ProductUpdateRequestDTO to Product Entity (Partial Updates)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "category", ignore = true)  // We will set category in the service layer
     Product toProduct(ProductUpdateRequestDTO productUpdateRequestDTO, @MappingTarget Product product);
 
     // Map Product Entity to ResponseDTO after creation or update
