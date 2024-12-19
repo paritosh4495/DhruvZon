@@ -21,30 +21,51 @@ Dhruvzon is a production-grade e-commerce application inspired by platforms like
 - **Data Initialization**: Pre-load data for testing and development.
 
 ## Project Structure
-The project follows a standard structure, allowing for easy navigation and understanding of its components. 
-.idea/
-dhruvzon/
-├── .mvn/
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/
-│   │   │       └── Ecommerce/
-│   │   │           └── dhruvzon/
-│   │   │               ├── controller/
-│   │   │               ├── dto/
-│   │   │               ├── enums/
-│   │   │               ├── exception/
-│   │   │               ├── initializer/
-│   │   │               ├── mapper/
-│   │   │               ├── model/
-│   │   │               ├── repository/
-│   │   │               ├── response/
-│   │   │               ├── security/
-│   │   │               └── service/
-│   │   └── DhruvzonApplication.java
-│   └── test/
-└── target/
+
+### Directory Breakdown
+
+- **`.idea/`**: Configuration files for the IDE.
+
+- **`dhruvzon/`**: Main application directory.
+  
+  - **`.mvn/`**: Maven wrapper files.
+  
+  - **`src/`**: Source code directory.
+    
+    - **`main/`**: Contains the main application code.
+      
+      - **`java/`**: Java source files.
+        
+        - **`com/Ecommerce/dhruvzon/`**: Base package for the application.
+          
+          - **`controller/`**: Controllers for handling requests.
+          
+          - **`dto/`**: Data Transfer Objects for data exchange.
+          
+          - **`enums/`**: Enumeration classes used in the application.
+          
+          - **`exception/`**: Custom exception classes.
+          
+          - **`initializer/`**: Classes for initializing data or configurations.
+          
+          - **`mapper/`**: Classes for mapping between DTOs and entities.
+          
+          - **`model/`**: Entity classes representing database tables.
+          
+          - **`repository/`**: Interfaces for database operations.
+          
+          - **`response/`**: Classes for structuring API responses.
+          
+          - **`security/`**: Security-related configurations and classes.
+          
+          - **`service/`**: Business logic and service classes.
+
+      - **`DhruvzonApplication.java`**: Main application entry point.
+
+    - **`test/`**: Contains test classes and resources.
+
+  - **`target/`**: Compiled bytecode and build artifacts.
+
 
 
 ## Installation
