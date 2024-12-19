@@ -75,7 +75,11 @@ public class ProductController {
     // Get products by category ->NOT WORKING
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/category/{category}")
-    public ResponseEntity<ApiResponse<List<ProductListDTO>>> getProductsByCategory(@PathVariable String category, @RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<ApiResponse<List<ProductListDTO>>> getProductsByCategory(
+            @PathVariable String category,
+            @RequestParam int page,
+            @RequestParam int size
+    ) {
         List<ProductListDTO> products = productService.getProductsByCategory(category, page, size);
         ApiResponse<List<ProductListDTO>> response = new ApiResponse<>(products, "Products by category fetched successfully");
         return ResponseEntity.ok(response);

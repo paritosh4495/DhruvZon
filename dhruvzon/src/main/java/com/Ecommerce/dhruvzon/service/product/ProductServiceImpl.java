@@ -190,8 +190,9 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductListDTO> getProductsByCategory(String category, int page, int size) {
 
         Category cat = categoryService.getCategoryByName(category);
+        System.out.println(cat.getName() +" "+cat.getProducts().stream().toList());
         Pageable pageable = PageRequest.of(page, size);
-        List<Product> products = productRepository.findByCategoryName(category, pageable);
+        List<Product> products = productRepository.findByCategoryName(cat.getName(), pageable);
         if (products.isEmpty()) {
             throw new ProductNotFoundException("No products found for the given category: " +category );
         }
@@ -237,7 +238,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductListDTO> getProductByBrandAndName(String brand, String name, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        List<Product> products = productRepository.findByBrandAndNameContainingIgnoreCase(brand, name, pageable);
+        List<Product> products = productRepository.findByBrandAndName(brand, name, pageable);
         if (products.isEmpty()) {
             throw new ProductNotFoundException("No products found for the given brand : " + brand+ " and name : " + name);
         }
