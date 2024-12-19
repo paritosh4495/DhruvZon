@@ -165,6 +165,10 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductListDTO> getAllProducts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         List<Product> products = productRepository.findAll(pageable).getContent();
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found ");
+        }
+
         return products.stream()
                 .map(productMapper::toProductListDTO)
                 .collect(Collectors.toList());
@@ -174,6 +178,9 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductListDTO> searchProducts(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         List<Product> products = productRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword, pageable);
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found for the given keyword: " + keyword);
+        }
         return products.stream()
                 .map(productMapper::toProductListDTO)
                 .collect(Collectors.toList());
@@ -185,6 +192,9 @@ public class ProductServiceImpl implements ProductService {
         Category cat = categoryService.getCategoryByName(category);
         Pageable pageable = PageRequest.of(page, size);
         List<Product> products = productRepository.findByCategoryName(category, pageable);
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found for the given category: " +category );
+        }
         return productMapper.toProductListDTOs(products);
     }
 
@@ -194,12 +204,18 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = PageRequest.of(page, size);
         List<Product> products = productRepository.findByBrand(brand, pageable);
         System.out.println(products.stream().toList() + " ");
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found for the given brand : " + brand);
+        }
         return productMapper.toProductListDTOs(products);
     }
 
     @Override
     public List<ProductResponseDTO> getProductByName(String name) {
         List<Product> products = productRepository.findByNameContainingIgnoreCase(name);
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found for the given name: " + name);
+        }
         return products.stream()
                 .map(productMapper::toResponseDTO)
                 .collect(Collectors.toList());
@@ -210,6 +226,9 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = PageRequest.of(page, size);
         ProductStatus productStatus = ProductStatus.valueOf(status.toUpperCase());
         List<Product> products = productRepository.findByStatus(productStatus, pageable);
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found for the given status: " + status);
+        }
         return products.stream()
                 .map(productMapper::toProductListDTO)
                 .collect(Collectors.toList());
@@ -219,6 +238,9 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductListDTO> getProductByBrandAndName(String brand, String name, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         List<Product> products = productRepository.findByBrandAndNameContainingIgnoreCase(brand, name, pageable);
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found for the given brand : " + brand+ " and name : " + name);
+        }
         return productMapper.toProductListDTOs(products);
     }
 
@@ -228,6 +250,9 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = PageRequest.of(page, size);
         ProductStatus productStatus = ProductStatus.valueOf(status.toUpperCase());
         List<Product> products = productRepository.findByCategoryNameAndStatus(category, productStatus, pageable);
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found for the given category : " + category+ " and status : " + status);
+        }
         return productMapper.toProductListDTOs(products);
     }
 
@@ -236,6 +261,9 @@ public class ProductServiceImpl implements ProductService {
         Category cat = categoryService.getCategoryByName(category);
         Pageable pageable = PageRequest.of(page, size);
         List<Product> products = productRepository.findByCategoryNameAndBrand(category, brand, pageable);
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found for the given category : " + category+ " and brand : " + brand);
+        }
         return productMapper.toProductListDTOs(products);
     }
 
