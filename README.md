@@ -1,132 +1,137 @@
-# DhruvZon E-commerce Backend
+# Dhruvzon E-commerce Application
 
-## Overview
-**DhruvZon** is a production-grade backend implementation for an e-commerce platform inspired by Amazon. Built with Spring Boot and a PostgreSQL database, this project adheres to industry best practices and conventions to ensure scalability, security, and high performance.
+Dhruvzon is a production-grade e-commerce application inspired by platforms like Amazon. It is designed to manage product listings, user accounts, order processing, and more. Built using **Java** and **Spring Boot**, the application emphasizes scalability and security.
 
-This backend application supports essential and advanced features required in a real-world e-commerce system, such as user management, product catalog management, role-based access control (RBAC), and more.
+## Table of Contents
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
-### Core Features
-1. **User Management:**
-   - Registration, Login, and Authentication with JWT.
-   - Role-based access control (Admin, User, Guest).
-
-2. **Product Management:**
-   - CRUD operations for products.
-   - Categories and subcategories with hierarchical structures.
-   - Product variants, inventory tracking, and media (images/videos).
-
-3. **Reviews and Ratings:**
-   - User reviews with ratings (1-5 scale).
-   - Moderation of reviews.
-
-4. **Security:**
-   - Production-grade security using Spring Security.
-   - Password hashing with BCrypt.
-
-### Advanced Features (Planned)
-- Shopping Cart and Checkout.
-- Payment integration.
-- Full-text search and filtering with pagination.
-- Dynamic pricing and discount systems.
-- Admin dashboard for analytics and management.
-
-## Tech Stack
-- **Backend Framework:** Spring Boot (3.4.0)
-- **Programming Language:** Java (21)
-- **Database:** PostgreSQL
-- **Security:** Spring Security, JWT (jjwt-api)
-- **ORM:** Hibernate with Spring Data JPA
-- **Validation:** Spring Boot Starter Validation
-- **Testing:** JUnit, Spring Boot Starter Test, Spring Security Test
-- **API Documentation:** Swagger (springdoc-openapi)
-- **Build Tool:** Maven
-
-## Installation
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your-username/dhruvzon-backend.git
-   cd dhruvzon-backend
-   ```
-
-2. **Set up the database:**
-   - Install PostgreSQL and create a database (e.g., `dhruvzon_db`).
-
-3. **Configure the application:**
-   - Update the `application.yml` file with your database credentials:
-     ```yaml
-     spring:
-       datasource:
-         url: jdbc:postgresql://localhost:5432/dhruvzon_db
-         username: your_username
-         password: your_password
-       jpa:
-         hibernate:
-           ddl-auto: update
-     ```
-
-4. **Build and run the application:**
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-
-5. **Access the API:**
-   - API Base URL: `http://localhost:8080`
-   - Swagger UI: `http://localhost:8080/swagger-ui.html`
+- **User Registration and Authentication**: Secure user management.
+- **Product Management**: Full CRUD operations for products.
+- **Filtering Options**: Category and brand-based filtering for easy navigation.
+- **JWT-Based Authentication**: Secure token-based user authentication.
+- **Role-Based Access Control**: Different access levels for users and admins.
+- **Exception Handling**: Robust error management.
+- **Data Initialization**: Pre-load data for testing and development.
 
 ## Project Structure
-```
-src/main/java/com/Ecommerce/dhruvzon/
-├── config/       # Security and application configuration
-├── controller/   # REST API controllers
-├── dto/          # Data Transfer Objects (Request and Response)
-├── exception/    # Global exception handling
-├── mapper/       # MapStruct mappers for DTOs
-├── model/        # Entity classes (e.g., User, Product, Category)
-├── repository/   # Spring Data JPA repositories
-├── service/      # Business logic services
-├── util/         # Utility classes
-```
+The project follows a standard structure, allowing for easy navigation and understanding of its components. 
+.idea/
+dhruvzon/
+    .mvn/
+    src/
+        main/
+            java/
+                com/
+                    Ecommerce/
+                        dhruvzon/
+                            controller/
+                            dto/
+                            enums/
+                            exception/
+                            initializer/
+                            mapper/
+                            model/
+                            repository/
+                            response/
+                            security/
+                            service/
+                            DhruvzonApplication.java
+        test/
+    target/
 
-## Current Progress
-1. **User Management:**
-   - User entity, DTOs, and repository finalized.
-   - Role-based access control implemented.
+## Installation
 
-2. **Product Management:**
-   - Product and category entities with hierarchical relationships implemented.
-   - Review and image management added.
+### Prerequisites
+To run this application, ensure you have the following installed:
+- **Java 21 or higher**
+- **Maven**
+- **Postgres** or any other relational database
 
-3. **Security:**
-   - JWT authentication is in place.
+### Steps
+1. **Clone the repository**:
+   ```bash
+   git clone <repository-url>
+   cd <repository-name>
+   ```
 
-4. **Configurations:**
-   - `application.yml` and `pom.xml` files finalized for a production-grade setup.
+2. **Configure the database**:
+   - Update the `application.properties` file with your database configuration.
 
-## Roadmap
-1. Complete product management (categories, subcategories, inventory).
-2. Implement shopping cart and checkout.
-3. Add payment integration.
-4. Build admin dashboard for analytics and control.
-5. Optimize performance with caching and indexing.
-6. Deploy the application on a cloud platform.
+3. **Build the project**:
+   ```bash
+   mvn clean install
+   ```
+
+4. **Run the application**:
+   ```bash
+   mvn spring-boot:run
+   ```
+
+## Usage
+Once the application is running, you can access the API endpoints using tools like Postman or through your frontend application.
+
+## API Endpoints
+
+### ProductController
+| Method | Endpoint                                   | Description                              |
+|--------|-------------------------------------------|------------------------------------------|
+| POST   | `/api/products/add`                       | Create a new product                     |
+| PUT    | `/api/products/update/{id}`              | Update an existing product               |
+| GET    | `/api/products/{id}`                      | Get a product by ID                      |
+| POST   | `/api/products/add/bulk`                 | Create multiple products in bulk         |
+| GET    | `/api/products/all`                       | Get all products                         |
+| GET    | `/api/products/search`                    | Search for products                      |
+| GET    | `/api/products/category/{category}`       | Get products by category                 |
+| GET    | `/api/products/brand/{brand}`             | Get products by brand                    |
+| GET    | `/api/products/status/{status}`           | Get products by status                   |
+| DELETE | `/api/products/{id}`                      | Delete a product by ID                   |
+| PATCH  | `/api/products/{id}/status`               | Update the status of a product           |
+
+### UserController
+| Method | Endpoint                                   | Description                              |
+|--------|-------------------------------------------|------------------------------------------|
+| POST   | `/api/users/register`                     | Register a new user                     |
+| PUT    | `/api/users/update/{id}`                  | Update an existing user                  |
+| GET    | `/api/users/{id}`                         | Get a user by ID                        |
+| GET    | `/api/users/email`                        | Get a user by email                     |
+| GET    | `/api/users/active`                       | Get all active users                    |
+
+### AdminController
+| Method | Endpoint                                   | Description                              |
+|--------|-------------------------------------------|------------------------------------------|
+| GET    | `/api/admin/all`                          | Get all users (admin functionality)     |
+
+### AuthController
+| Method | Endpoint                                   | Description                              |
+|--------|-------------------------------------------|------------------------------------------|
+| POST   | `/api/auth/login`                         | User login                               |
 
 ## Contributing
-Contributions are welcome! Please follow these steps:
+Contributions are welcome! Please fork the repository and create a pull request with your changes. Ensure you follow coding standards and include relevant tests.
+
 1. Fork the repository.
-2. Create a new branch for your feature (`git checkout -b feature-branch-name`).
-3. Commit and push your changes.
-4. Create a pull request describing your changes.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -am 'Add some feature'
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature/your-feature
+   ```
+5. Create a new Pull Request.
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the LICENSE file for details.
 
-## Contact
-For any queries or suggestions, please reach out to the project maintainer:
-- **Name:** Paritosh Pal
-- **Email:** your_email@example.com
-
----
-
-Thank you for checking out DhruvZon E-commerce Backend! Together, let's build a robust and scalable application.
 
