@@ -1,10 +1,7 @@
 package com.Ecommerce.dhruvzon.dto.product;
 
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -35,6 +32,7 @@ public class ProductCreateRequestDTO {
     @Positive
     private Integer stockQuantity;
 
+    @Min(value = 0)
     private BigDecimal discount = BigDecimal.ZERO; // Optional
 
 }
