@@ -24,6 +24,9 @@ public class ProductCreateRequestDTO {
     @NotNull
     private String category; // Reference to the category Name
 
+    private String parentCategoryName; // Optional field for hierarchical relationships
+
+
     @NotBlank
     @Size(max = 122)
     private String brand;

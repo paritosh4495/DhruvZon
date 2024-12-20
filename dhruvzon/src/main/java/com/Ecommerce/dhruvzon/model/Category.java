@@ -50,17 +50,7 @@ public class Category {
     private LocalDateTime modifiedDate;
 
     // Prevent cycles in the parent-child relationship
-    @PrePersist
-    @PreUpdate
-    private void validateCategoryHierarchy() {
-        if (parentCategory != null && parentCategory.getId().equals(this.getId())) {
-            throw new IllegalArgumentException("A category cannot be its own parent.");
-        }
-        // Optionally enforce that subcategories must have a parent category
-        if (parentCategory == null && this.subCategories != null && !this.subCategories.isEmpty()) {
-            throw new IllegalArgumentException("Top-level categories cannot have subcategories without a parent.");
-        }
-    }
+
 
 
 }

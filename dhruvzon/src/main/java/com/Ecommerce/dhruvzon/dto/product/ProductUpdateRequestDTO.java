@@ -18,6 +18,8 @@ public class ProductUpdateRequestDTO {
     private BigDecimal price; // Optional
 
     private String category; // Optional
+    private String parentCategoryName; // Optional field for hierarchical relationships
+
 
     private String brand; // Optional
 

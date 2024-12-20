@@ -2,6 +2,7 @@ package com.Ecommerce.dhruvzon.service.product;
 
 import com.Ecommerce.dhruvzon.dto.product.*;
 import com.Ecommerce.dhruvzon.enums.ProductStatus;
+import com.Ecommerce.dhruvzon.exception.CategoryNotFoundException;
 import com.Ecommerce.dhruvzon.exception.ProductAlreadyExistsException;
 import com.Ecommerce.dhruvzon.exception.ProductNotFoundException;
 import com.Ecommerce.dhruvzon.mapper.ProductMapper;
@@ -39,14 +40,23 @@ public class ProductServiceImpl implements ProductService {
         }
 
         // Fetch the category based on the category name
+        String normalizedCategoryName = normalize(productCreateRequestDTO.getCategory());
 
         // Check if the category exists or create a new one using the category name
-        Category category = categoryRepository.findByName(productCreateRequestDTO.getCategory())
+        Category category = categoryRepository.findByName(normalizedCategoryName)
                 .orElseGet(() -> {
                     Category newCategory = new Category();
-                    newCategory.setName(productCreateRequestDTO.getCategory());
+                    newCategory.setName(normalizedCategoryName);
                     return categoryRepository.save(newCategory); // Save the new category
                 });
+
+        String normalizedParentCategoryName = normalize(productCreateRequestDTO.getParentCategoryName());
+
+        if (productCreateRequestDTO.getParentCategoryName() != null) {
+            Category parentCategory = categoryRepository.findByName(normalizedParentCategoryName)
+                    .orElseThrow(() -> new RuntimeException("Parent category not found"));
+            category.setParentCategory(parentCategory);
+        }
 
         Product product = productMapper.toProduct(productCreateRequestDTO);
         product.setCategory(category);
@@ -72,15 +82,28 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         // If category is updated, validate and set it
+        String normalizedCategoryName = normalize(productUpdateRequestDTO.getCategory());
+
+
         if (productUpdateRequestDTO.getCategory() != null) {
-            Category category = categoryRepository.findByName(productUpdateRequestDTO.getCategory())
+            Category category = categoryRepository.findByName(normalizedCategoryName)
                     .orElseGet(() -> {
                         Category newCategory = new Category();
-                        newCategory.setName(productUpdateRequestDTO.getCategory());
+                        newCategory.setName(normalizedCategoryName);
                         return categoryRepository.save(newCategory); // Save the new category
                     });
             existingProduct.setCategory(category);
         }
+        // Set the parent category if provided
+
+        String normalizedParentCategoryName = normalize(productUpdateRequestDTO.getParentCategoryName());
+
+        if (productUpdateRequestDTO.getParentCategoryName() != null) {
+            Category parentCategory = categoryRepository.findByName(normalizedParentCategoryName)
+                    .orElseThrow(() -> new RuntimeException("Parent category not found"));
+            existingProduct.getCategory().setParentCategory(parentCategory);
+        }
+
 
         if (productUpdateRequestDTO.getName() != null) {
             existingProduct.setName(productUpdateRequestDTO.getName());
@@ -141,6 +164,14 @@ public class ProductServiceImpl implements ProductService {
                         newCategory.setName(dto.getCategory());
                         return categoryRepository.save(newCategory); // Save the new category
                     });
+
+            // Set the parent category if provided
+            if (dto.getParentCategoryName() != null) {
+                Category parentCategory = categoryRepository.findByName(dto.getParentCategoryName())
+                        .orElseThrow(() -> new CategoryNotFoundException("Parent category not found"));
+                category.setParentCategory(parentCategory);
+            }
+
             // Map the DTO to Product entity
             Product product = productMapper.toProduct(dto);
             product.setCategory(category);
@@ -292,6 +323,11 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
         return product.getStockQuantity() >= quantity;
+    }
+
+
+    private String normalize(String value) {
+        return value == null ? null : value.trim().toLowerCase();
     }
 
 
