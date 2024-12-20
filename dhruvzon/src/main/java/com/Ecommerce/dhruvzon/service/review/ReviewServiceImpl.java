@@ -53,6 +53,7 @@ public class ReviewServiceImpl implements ReviewService {
                     return new UserNotFoundException("User not found with id: " + userID);
                 });
 
+
         Review review = reviewMapper.toReview(reviewCreateRequestDTO);
         review.setProduct(product);
         review.setUser(user);
@@ -76,6 +77,8 @@ public class ReviewServiceImpl implements ReviewService {
                     logger.error("Review not found with ID: {}", reviewId);
                     return new ReviewNotFoundException("Review not found with id: " + reviewId);
                 });
+
+        // Check if the review belongs to the user
 
         review.setContent(reviewUpdateRequestDTO.getContent());
         review.setRating(reviewUpdateRequestDTO.getRating());
