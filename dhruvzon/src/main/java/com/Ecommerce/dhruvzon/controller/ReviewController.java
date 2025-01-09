@@ -21,12 +21,11 @@ public class ReviewController {
 
     // Create a review
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/add/product/{productId}/user/{userId}")
+    @PostMapping("/add/product/{productId}")
     public ResponseEntity<ApiResponse<ReviewResponseDTO>> createReview(
             @PathVariable Long productId,
-            @PathVariable Long userId,
             @RequestBody ReviewCreateOrUpdateRequestDTO reviewCreateRequestDTO) {
-        ReviewResponseDTO createdReview = reviewService.createReview(productId, userId, reviewCreateRequestDTO);
+        ReviewResponseDTO createdReview = reviewService.createReview(productId, reviewCreateRequestDTO);
         ApiResponse<ReviewResponseDTO> response = new ApiResponse<>(createdReview, "Review created successfully");
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

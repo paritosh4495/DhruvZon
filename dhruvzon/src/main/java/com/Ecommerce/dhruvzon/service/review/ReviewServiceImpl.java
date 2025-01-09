@@ -4,6 +4,7 @@ import com.Ecommerce.dhruvzon.dto.review.ReviewCreateOrUpdateRequestDTO;
 import com.Ecommerce.dhruvzon.dto.review.ReviewResponseDTO;
 import com.Ecommerce.dhruvzon.exception.ProductNotFoundException;
 import com.Ecommerce.dhruvzon.exception.ReviewNotFoundException;
+import com.Ecommerce.dhruvzon.exception.UnauthorizedException;
 import com.Ecommerce.dhruvzon.exception.UserNotFoundException;
 import com.Ecommerce.dhruvzon.mapper.ReviewMapper;
 import com.Ecommerce.dhruvzon.model.Product;
@@ -12,10 +13,13 @@ import com.Ecommerce.dhruvzon.model.User;
 import com.Ecommerce.dhruvzon.repository.ProductRepository;
 import com.Ecommerce.dhruvzon.repository.ReviewRepository;
 import com.Ecommerce.dhruvzon.repository.UserRepository;
+import com.Ecommerce.dhruvzon.security.user.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,13 +38,14 @@ public class ReviewServiceImpl implements ReviewService {
     private final UserRepository userRepository;
 
     @Override
-    public ReviewResponseDTO createReview(Long productId, Long userID, ReviewCreateOrUpdateRequestDTO reviewCreateRequestDTO) {
-        logger.info("Creating review for product ID: {} and user ID: {}", productId, userID);
+    public ReviewResponseDTO createReview(Long productId, ReviewCreateOrUpdateRequestDTO reviewCreateRequestDTO) {
+
 
         if (reviewCreateRequestDTO == null) {
             logger.error("Review create request DTO is null");
             throw new IllegalArgumentException("Review cannot be null");
         }
+        Long userID = getCurrentUserId(); // Get the authenticated user's ID
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> {
@@ -52,6 +57,13 @@ public class ReviewServiceImpl implements ReviewService {
                     logger.error("User not found with ID: {}", userID);
                     return new UserNotFoundException("User not found with id: " + userID);
                 });
+
+
+        // Check if the user has already reviewed this product
+        boolean reviewExists = reviewRepository.existsByProductIdAndUserId(productId, userID);
+        if (reviewExists) {
+            throw new IllegalArgumentException("You have already reviewed this product");
+        }
 
 
         Review review = reviewMapper.toReview(reviewCreateRequestDTO);
@@ -80,6 +92,15 @@ public class ReviewServiceImpl implements ReviewService {
 
         // Check if the review belongs to the user
 
+        Long userId = getCurrentUserId(); // Get the authenticated user's ID
+
+
+        // Check if the review belongs to the user
+        if (!review.getUser().getId().equals(userId)) {
+            throw new UnauthorizedException("You are not authorized to update this review");
+        }
+
+
         review.setContent(reviewUpdateRequestDTO.getContent());
         review.setRating(reviewUpdateRequestDTO.getRating());
 
@@ -97,6 +118,13 @@ public class ReviewServiceImpl implements ReviewService {
                     logger.error("Review not found with ID: {}", reviewId);
                     return new ReviewNotFoundException("Review not found with id: " + reviewId);
                 });
+
+        Long userId = getCurrentUserId(); // Get the authenticated user's ID
+
+        // Check if the review belongs to the user
+        if (!review.getUser().getId().equals(userId)) {
+            throw new UnauthorizedException("You are not authorized to delete this review");
+        }
 
         reviewRepository.delete(review);
         logger.info("Review deleted successfully with ID: {}", reviewId);
@@ -149,5 +177,12 @@ public class ReviewServiceImpl implements ReviewService {
 
         List<Review> reviews = reviewRepository.findByUserId(userId);
         return reviews.stream().map(reviewMapper::toReviewResponseDTO).collect(Collectors.toList());
+    }
+
+
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return userDetails.getId();
     }
 }

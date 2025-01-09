@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
         ApiResponse<String> apiResponse = new ApiResponse<>(null, e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(apiResponse);
     }
+
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ApiResponse<String>> handleProductNotFoundException(ProductNotFoundException e) {
         ApiResponse<String> apiResponse = new ApiResponse<>(null, e.getMessage());
@@ -37,6 +38,31 @@ public class GlobalExceptionHandler {
         ApiResponse<String> apiResponse = new ApiResponse<>(null, e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
+
+    @ExceptionHandler(ImageNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>> handleImageNotFoundException(ImageNotFoundException e) {
+        ApiResponse<String> apiResponse = new ApiResponse<>(null, e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
+    }
+
+    @ExceptionHandler(ProductAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<String>> handleProductAlreadyExistsException(ProductAlreadyExistsException e) {
+        ApiResponse<String> apiResponse = new ApiResponse<>(null, e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(apiResponse);
+    }
+
+    @ExceptionHandler(ReviewNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>> handleReviewNotFoundException(ReviewNotFoundException e) {
+        ApiResponse<String> apiResponse = new ApiResponse<>(null, e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiResponse<String>> handleUnauthorizedException(UnauthorizedException e) {
+        ApiResponse<String> apiResponse = new ApiResponse<>(null, e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+    }
+
 
 
 }
