@@ -6,7 +6,7 @@ import com.Ecommerce.dhruvzon.model.Cart;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = CartItemMapper.class)
 public interface CartMapper {
 
     @Mapping(source = "user.id", target = "userId")

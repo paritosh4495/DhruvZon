@@ -50,11 +50,17 @@ public class CartItem {
     @Column(nullable = false)
     private BigDecimal finalPrice;
 
-
     @PrePersist
     @PreUpdate
-    private void calculateFinalPrice() {
-        finalPrice = price.subtract(discount);
+    private void calculatePrices() {
+        // Ensure discount does not exceed unit price
+        BigDecimal validDiscount = discount.min(price);
+
+        // Calculate final price per unit
+        finalPrice = price.subtract(validDiscount);
+
+        // Calculate subtotal based on final price and quantity
+        subtotal = finalPrice.multiply(BigDecimal.valueOf(quantity));
     }
 
 

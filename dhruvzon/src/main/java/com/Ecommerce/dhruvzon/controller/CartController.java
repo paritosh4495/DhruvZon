@@ -31,7 +31,7 @@ public class CartController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<CartResponseDTO> getCartByUserId(@PathVariable Long userId) {
         CartResponseDTO responseDTO = cartService.getCartByUserId(userId);
         return ResponseEntity.ok(responseDTO);

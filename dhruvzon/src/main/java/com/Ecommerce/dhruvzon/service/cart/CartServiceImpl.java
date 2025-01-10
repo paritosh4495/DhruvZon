@@ -53,13 +53,13 @@ public class CartServiceImpl implements CartService {
             throw new IllegalArgumentException("CartRequestDTO cannot be null");
         }
 
+        // Fetch or create the user's cart
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseGet(() -> {
                     Cart newCart = new Cart();
                     newCart.setUser(user);
                     newCart.setTotalPrice(BigDecimal.ZERO);
-                    cartRepository.save(newCart);
-                    return newCart;
+                    return cartRepository.save(newCart); // Save the new cart
                 });
 
         for (CartItemRequestDTO cartItemRequestDTO : cartRequestDTO.getCartItems()) {
@@ -73,18 +73,29 @@ public class CartServiceImpl implements CartService {
                 throw new IllegalArgumentException("Requested quantity exceeds product stock.");
             }
 
-            CartItem cartItem = new CartItem();
-            cartItem.setCart(cart);
-            cartItem.setProduct(product);
-            cartItem.setQuantity(cartItemRequestDTO.getQuantity());
-            cartItem.setPrice(product.getPrice());
-            cart.getCartItems().add(cartItem);
+            // Check if the product is already in the cart
+            CartItem existingItem = cart.getCartItems().stream()
+                    .filter(item -> item.getProduct().getId().equals(cartItemRequestDTO.getProductId()))
+                    .findFirst()
+                    .orElse(null);
 
-            logger.info("Added item [{}] to cart for user [{}]", product.getId(), userId);
+            if (existingItem != null) {
+                // Update the quantity and price for the existing cart item
+                existingItem.setQuantity(existingItem.getQuantity() + cartItemRequestDTO.getQuantity());
+            } else {
+                // Add a new cart item
+                CartItem cartItem = new CartItem();
+                cartItem.setCart(cart);
+                cartItem.setProduct(product);
+                cartItem.setQuantity(cartItemRequestDTO.getQuantity());
+                cartItem.setPrice(product.getPrice());
+                cart.getCartItems().add(cartItem);
+                cartItemRepository.save(cartItem); // Save the new cart item
+            }
         }
 
         calculateTotalPrice(cart);
-        cartRepository.save(cart);
+        cartRepository.save(cart); // Save the updated cart
 
         return cartMapper.toCartResponseDTO(cart);
     }
@@ -95,6 +106,7 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new CartItemNotFoundException("CartItem not found with ID: " + cartItemId));
 
         Cart cart = cartItem.getCart();
+        cart.getCartItems().remove(cartItem); // Remove from the collection
         cartItemRepository.delete(cartItem);
         calculateTotalPrice(cart);
         cartRepository.save(cart);
