@@ -1,25 +1,20 @@
 package com.Ecommerce.dhruvzon.dto.order;
 
 import com.Ecommerce.dhruvzon.dto.orderItem.OrderItemRequestDTO;
-import com.Ecommerce.dhruvzon.enums.PaymentMethod;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class OrderRequestDTO {
+public class OrderDraftRequestDTO {
 
-    @NotNull(message = "User ID is required")
-    private Long userId;
-
-    @NotEmpty(message = "Order items are required")
+    @NotEmpty(message = "Order items cannot be empty")
     private List<OrderItemRequestDTO> orderItems;
 
-    @NotBlank(message = "Address is required")
-    private String address;
+    @NotBlank(message = "Shipping address is required")
+    private String shippingAddress;
 
     @NotBlank(message = "Payment method is required")
     private String paymentMethod;

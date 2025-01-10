@@ -16,12 +16,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "T_Order")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
-@Table(name = "T_Order")
 public class Order {
 
     @Id
@@ -42,8 +42,8 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    @Column(name = "payment_status")
     @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
 
     @Column(name = "payment_details", columnDefinition = "TEXT")
@@ -56,13 +56,33 @@ public class Order {
     @Column(nullable = false)
     private PaymentMethod paymentMethod;
 
+    @Column(name = "is_draft", nullable = false)
+    private Boolean isDraft = true;
+
+    @Column(name = "shipping_method")
+    private String shippingMethod;
+
+    @Column(name = "tracking_id")
+    private String trackingId;
+
+    @Column(name = "expected_delivery_date")
+    private LocalDateTime expectedDeliveryDate;
+
+    @Column(name = "delivery_instructions", columnDefinition = "TEXT")
+    private String deliveryInstructions;
+
+    @Column(name = "payment_intent_id")
+    private String paymentIntentId;
+
+    @Column(name = "is_cancellable", nullable = false)
+    private Boolean isCancellable = true;
+
+    @Column(name = "is_refundable", nullable = false)
+    private Boolean isRefundable = true;
 
     @CreationTimestamp
     private LocalDateTime createdDate;
 
     @UpdateTimestamp
     private LocalDateTime modifiedDate;
-
-
-
 }

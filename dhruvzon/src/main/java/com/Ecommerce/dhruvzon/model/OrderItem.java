@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 @Table(name = "T_OrderItem")
 public class OrderItem {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,9 +32,11 @@ public class OrderItem {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "price", nullable = false)
-    private BigDecimal price;
+    @Column(name = "price_snapshot", nullable = false)
+    private BigDecimal priceSnapshot;
 
+    @Column(name = "total_price", nullable = false)
+    private BigDecimal totalPrice;
 
 
 
