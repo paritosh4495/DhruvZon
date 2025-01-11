@@ -49,11 +49,11 @@ public class Order {
     @Column(name = "payment_details", columnDefinition = "TEXT")
     private String paymentDetails;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String address;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private PaymentMethod paymentMethod;
 
     @Column(name = "is_draft", nullable = false)

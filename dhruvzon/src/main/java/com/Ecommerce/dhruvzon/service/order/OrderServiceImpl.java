@@ -5,6 +5,7 @@ import com.Ecommerce.dhruvzon.dto.orderItem.OrderItemRequestDTO;
 import com.Ecommerce.dhruvzon.dto.payment.PaymentRequestDTO;
 import com.Ecommerce.dhruvzon.dto.payment.PaymentResponseDTO;
 import com.Ecommerce.dhruvzon.enums.OrderStatus;
+import com.Ecommerce.dhruvzon.enums.PaymentMethod;
 import com.Ecommerce.dhruvzon.enums.PaymentStatus;
 import com.Ecommerce.dhruvzon.exception.*;
 import com.Ecommerce.dhruvzon.mapper.OrderItemMapper;
@@ -41,12 +42,12 @@ public class OrderServiceImpl implements OrderService {
     public OrderDraftResponseDTO convertCartToDraftOrder() {
         Long userId = getCurrentUserId();
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new UserNotFoundException("User Not Found"));
+                .orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
-        Cart cart = cartRepository.findById(userId)
+        Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new CartNotFoundException("Cart not found"));
 
-        if( cart==null || cart.getCartItems().isEmpty()){
+        if (cart == null || cart.getCartItems().isEmpty()) {
             throw new IllegalArgumentException("Cart is empty");
         }
 
@@ -54,6 +55,8 @@ public class OrderServiceImpl implements OrderService {
         order.setIsDraft(true);
         order.setUser(user);
         order.setStatus(OrderStatus.DRAFT);
+        order.setAddress("Default Address"); // This should be updated later
+        order.setPaymentMethod(PaymentMethod.UPI); // This should be updated later
         BigDecimal totalAmount = BigDecimal.ZERO;
         List<OrderItem> orderItems = new ArrayList<>();
         for (CartItem cartItem : cart.getCartItems()) {
@@ -61,20 +64,16 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setProduct(cartItem.getProduct());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setPriceSnapshot(cartItem.getProduct().getPrice());
-
             orderItem.setTotalPrice(cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
             orderItem.setOrder(order);
             orderItems.add(orderItem);
             totalAmount = totalAmount.add(orderItem.getTotalPrice());
-
         }
         order.setOrderItems(orderItems);
         order.setTotalPrice(totalAmount);
 
         orderRepository.save(order);
         return orderMapper.toDraftResponseDTO(order);
-
-
     }
 
     @Override
@@ -91,29 +90,15 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalOperationException("You are not authorized to update this Order");
         }
 
-        List<OrderItem> existingOrderItems = draftOrder.getOrderItems();
-        List<OrderItem> updatedOrderItems = new ArrayList<>();
+        // Clear existing order items
+        draftOrder.getOrderItems().clear();
 
+        List<OrderItem> updatedOrderItems = new ArrayList<>();
         for (OrderItemRequestDTO itemRequest : orderDraftRequestDTO.getOrderItems()) {
             Long productId = itemRequest.getProductId();
             Integer quantity = itemRequest.getQuantity();
-            boolean itemExists = false;
 
-            for (OrderItem existingItem : existingOrderItems) {
-                if (existingItem.getProduct().getId().equals(productId)) {
-                    itemExists = true;
-                    if (quantity > 0) {
-                        // Update existing item
-                        existingItem.setQuantity(quantity);
-                        existingItem.setTotalPrice(existingItem.getProduct().getPrice().multiply(BigDecimal.valueOf(quantity)));
-                        updatedOrderItems.add(existingItem);
-                    }
-                    break;
-                }
-            }
-
-            if (!itemExists && quantity > 0) {
-                // Add new item
+            if (quantity > 0) {
                 OrderItem newItem = new OrderItem();
                 newItem.setProduct(productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product Not Found")));
                 newItem.setQuantity(quantity);
@@ -123,9 +108,6 @@ public class OrderServiceImpl implements OrderService {
                 updatedOrderItems.add(newItem);
             }
         }
-
-        // Remove items that are not in the request
-        existingOrderItems.removeIf(item -> !updatedOrderItems.contains(item));
 
         // Set the updated items to the order
         draftOrder.setOrderItems(updatedOrderItems);
@@ -142,6 +124,7 @@ public class OrderServiceImpl implements OrderService {
         // Convert to OrderDraftResponseDTO
         return orderMapper.toDraftResponseDTO(draftOrder);
     }
+
 
     @Override
     public void removeItemFromDraftOrder(Long orderId, Long productId) {

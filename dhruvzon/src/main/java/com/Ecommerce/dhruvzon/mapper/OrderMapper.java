@@ -10,7 +10,6 @@ import org.mapstruct.Mapping;
 public interface OrderMapper {
 
 
-    @Mapping(target = "user.id", source = "userId")
     @Mapping(target = "status", constant = "DRAFT")
     Order toDraftEntity(OrderDraftRequestDTO dto);
 
@@ -26,7 +25,6 @@ public interface OrderMapper {
 
     @Mapping(target = "orderId", source = "id")
     @Mapping(target = "paymentStatus", source = "paymentStatus")
-    @Mapping(target = "paymentDetails", source = "paymentDetails")
     PaymentResponseDTO toPaymentResponseDTO(Order order);
 
     @Mapping(target = "orderId", source = "id")
